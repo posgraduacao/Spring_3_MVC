@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+						http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<!-- MAIL SERVICE -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="port" value="${email.port}" />
+		<property name="protocol" value="${email.protocol}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.debug">${email.javamail.mail.debug}</prop>
+				<prop key="mail.smtp.auth">${email.javamail.mail.smtp.auth}</prop>
+				<prop key="mail.smtp.starttls.enable">${email.javamail.mail.smtp.starttls.enable}</prop>
+				<prop key="mail.from">${email.javamail.mail.smtp.from}</prop>
+<!-- 				<prop key="mail.smtp.from">${email.javamail.mail.smtp.from}</prop> -->
+			</props>
+		</property>
+	</bean>
+	
+</beans>

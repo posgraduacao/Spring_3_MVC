@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	<!-- ************** ESPECIFICA QUAIS PACOTES DEVEM SER SCANEADOS ************** -->
+	<context:component-scan base-package="br.up.pos.spring" />
+
+	<!-- ************** HABILITA SPRING E JAVA ANNOTATIONS ************** 
+	<mvc:annotation-driven validator="validator" />
+	-->
+
+	<mvc:default-servlet-handler />
+
+	<!-- ************** CARREGA E COLOCA NA MEMORIA ARQUIVOS DE PROPRIEDADES 
+		************** -->
+	<context:property-placeholder location="classpath*:*.properties" />
+
+	<!-- JSON -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="false">
+			<bean id="jacksonMessageConverter"
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<bean id="gson" class="com.google.gson.Gson" />
+
+	<!-- ************** CONFIGURA QUAL PAGINA SERÁ APRESENTADA A PARTIR DA STRING 
+		RETORNADA PELO CONTROLLER ************** concatena /WEB-INF/views/ + (String 
+		retorno CONTROLLER) + .jsp 
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+		<property name="cache" value="false" />
+	</bean>
+		-->
+	
+
+	<!-- ************** HABILITA O TRAFEGO DE ARRAY DE BYTE (UPLOAD) E DEFINE 
+		PARAMETROS DELIMITADORES ************** -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
+		<property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
+	</bean>
+
+	<!-- ************** CARREGA E COLOCA NA MEMORIA ARQUIVOS DE PROPRIEDADES 
+		************** -->
+	<context:property-placeholder location="classpath*:*.properties" />
+
+	<!-- ************** OS VALORES DO ARQUIVO ESPECIFICADO PODERAM SER ACESSADOS 
+		PELA VARIAVEL ************** -->
+	<util:properties id="appProp" location="classpath:applications.properties" />
+
+
+	<!-- ************** HABILITA CACHE *************** -> CONFIGURA CACHE PARA 
+		CHAMADAS A URLs /resources/** (esse padrão URL normalmente utilizados para 
+		arquivos estaticos [css,img,js,font]) -> Atributo mapping: Indica o URL Mapping 
+		-> Atributo location: Indica o caminho no projeto -> Atributo cache-period: 
+		Indica o tempo de cache em SEGUNDOS até recarregar novamente os arquivos -->
+	<mvc:resources mapping="/resources/**" location="/resources/"
+		cache-period="31556926" />
+
+
+	<!-- ************** CONFIGURA QUAL PARTES SERÃO APRESENTADAS A PARTIR DA 
+		STRING RETORNADA PELO CONTROLLER ************** OBS: Observar que os BEANS 
+		não possuem ID. Basta que estajam declarado e devidamente configurados para 
+		serem usados pelo spring <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
+		p:viewClass="org.springframework.web.servlet.view.tiles2.TilesView" /> <bean 
+		class="org.springframework.web.servlet.view.tiles2.TilesConfigurer"> <property 
+		name="definitions"> <list> <value>/WEB-INF/views/tiles/tiles-layouts.xml</value> 
+		<value>/WEB-INF/views/tiles/views.xml</value> </list> </property> </bean> -->
+
+	<!-- ************** DEFINE A LINGUA PADRÃO DA APLICAÇÃO ************** -->
+	<bean class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<!-- <bean class="org.springframework.web.servlet.i18n.FixedLocaleResolver"> -->
+		<property name="defaultLocale" value="pt_BR" />
+	</bean>
+
+	<!-- ************** DEFINE O CAMINHO DOS ARQUIVOS DE MENSAGEM DE INTERNCIONALIZAÇÃO 
+		************** -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:i18n/messages</value>
+				<value>classpath:i18n/errors</value>
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="cacheSeconds" value="0" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- JSR-303 Para o validador dos beans, define quem ira traduzir as msgs -->
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+
+	<!-- ************** DEFINE OS INTERCEPTORS, BASEADO NAS URLs ************** -->
+
+	<mvc:interceptors>
+		<!-- ********** DEFINE QUE TODAS AS CHAMADAS DEVERAM PASSAR POR ESSE INTERCEPTOR 
+			********** -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<!-- ********** DEFINE QUAIS URLs DEVERÃO SER IGNORADAS *********** -->
+			<mvc:exclude-mapping path="/requisicao/calcular/somar" />
+			<bean class="br.up.pos.spring.interceptor.Interceptor1" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+</beans>

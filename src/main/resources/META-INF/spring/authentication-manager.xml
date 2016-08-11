@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+	xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- **************  DEFINE PARAMETROS PARA O CONTROLADOR DE AUTENTICAÇÃO *************** 
+    <authentication-manager>
+    	<authentication-provider>
+    		<password-encoder hash="sha"/>
+    		  <jdbc-user-service data-source-ref="dataSource"
+    		  						users-by-username-query='SELECT email AS "username", senha AS "password", ativo AS "enabled" FROM usuario WHERE email=?'
+    		  						authorities-by-username-query="SELECT
+																		u.email,
+																		g.perfil
+																	FROM usuario u
+																		INNER JOIN grupo g ON u.id_grupo = g.id
+																	WHERE u.email=? AND u.ativo = 1 AND g.ativo = 1" />
+    	</authentication-provider>
+    </authentication-manager>
+	-->
+    
+
+	<!-- **************  DEFINE PARAMETROS PARA O CONTROLADOR DE AUTENTICAÇÃO *************** -->
+    <authentication-manager>
+    	<authentication-provider>
+			<user-service>
+				<user name="admin"	password="iniciar" 	authorities="ROLE_ADMIN" />
+				<user name="user" 	password="iniciar" 	authorities="ROLE_USER" />
+				<user name="both" 	password="iniciar" 	authorities="ROLE_ADMIN,ROLE_USER" />
+			</user-service>
+    	</authentication-provider>
+    </authentication-manager>
+    
+    <!-- 
+    	**************  Criando usuario no Container ***************
+    	1) adicionar as linhas abaixo no arquivo tomcat-users.xml
+    	
+		<role rolename="ROLE_USER"/>
+		<role rolename="ROLE_ADMIN"/>
+		<user username="admin" password="iniciar" roles="ROLE_ADMIN"/>
+		<user username="user" password="iniciar" roles="ROLE_USER"/>
+		<user username="both" password="iniciar" roles="ROLE_ADMIN,ROLE_USER"/>
+    
+     -->
+
+</beans:beans>

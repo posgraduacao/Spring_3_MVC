@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+	xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+                        
+
+	<!-- **************  HABILITA UTILIZAR REGRAS DE SECURITY NO JSP *************** -->
+	<beans:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+	<!--  **************  DECLARA QUAIS URLS NÃO PRECISAM DE SEGURANÇA PARA SEREM ACESSADAS  *************** -->	
+	<http pattern="/resources/**" 	security="none"/>
+  	<http pattern="/login" 			security="none"/>
+	
+	<!-- Habilita validacao de seguranca baseado na anotacao do metodo do controller -->
+	<!-- <global-method-security pre-post-annotations="enabled"/> -->
+  	
+  	<!-- 
+  		**************  DEFINE AS REGRAS DE ACESSO DE ACORDO COM  URL  ***************
+  		-> Interpretará a URL enviada
+  		-> Atributo use-expressions: Não permite expressão na URL
+  		-> Atributo access-denied-page: Define o caminho da página de erro a ser apresentado em caso de bloqueio por permissão
+  		
+  		OBS: URLs MAIS RESTRITIVAS (ESPECIFICAS) TEM PRIORIDADE PELAS MENOS RESTRITIVAS
+  	-->
+    <http use-expressions="false" auto-config="true" access-denied-page="/error/403">
+
+		<!-- DEFINE QUE URLs INICIADA COM /usuario SO PODERAM SER ACESSADAS POR USUARIOS DO GRUPO ADMIN -->
+        <intercept-url pattern="/usuario/**" access="ROLE_ADMIN" />
+
+		<!-- DEFINE QUE URLs DEVEM ESTAR AUTENTICADAS, MENOS AS DEFINIDAS QUE NÃO PRECISAM DE AUTENTICAÇÃO -->
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
+
+		<!-- 
+	  		**************  DEFINE PROPRIEDADES PARA O FORM DE LOGIN  ***************
+	  		-> Atributo login-processing-url: Qual a URL a ser enviada no form de login
+	  		-> Atributo login-page: Caminho para a pagina de login
+	  		-> Atributo authentication-failure-url: URL a ser executada caso o Login falhe
+	  	-->
+    	<form-login 
+    		login-processing-url="/j_spring_security_check" 
+    		
+    		login-page="/login" 
+    		authentication-failure-url="/login"/>
+        <logout invalidate-session="true" logout-url="/j_spring_security_logout" logout-success-url="/" />
+
+    </http>
+    
+    
+     <beans:import resource="authentication-manager.xml" />
+
+	
+
+</beans:beans>
