@@ -6,8 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -25,7 +23,6 @@ public class Usuario implements Serializable {
 	@GeneratedValue
 	private Long id;
 
-	
 	@Size(min = 0, max = 255)
 	private String nome;
 
@@ -38,14 +35,10 @@ public class Usuario implements Serializable {
 	@Column
 	private String senha;
 
-
 	@Column
 	private boolean ativo;
-
-	@OneToOne
-	@JoinColumn(name = "id_grupo")
-	@NotNull
-	private Grupo grupo;
+	
+	private String accessRules;
 
 
 	public Long getId() {
@@ -72,20 +65,20 @@ public class Usuario implements Serializable {
 		this.email = email;
 	}
 
-	public Grupo getGrupo() {
-		return grupo;
-	}
-
-	public void setGrupo(Grupo grupo) {
-		this.grupo = grupo;
-	}
-
 	public String getSenha() {
 		return senha;
 	}
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public String getAccessRules() {
+		return accessRules;
+	}
+
+	public void setAccessRules(String accessRules) {
+		this.accessRules = accessRules;
 	}
 
 	public boolean isAtivo() {

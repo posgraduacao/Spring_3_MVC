@@ -3,12 +3,22 @@ package br.up.pos.spring.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+@Entity
+@Table(name="FELIPE")
 @SuppressWarnings("serial")
 public class Conta implements Serializable {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
 	
 	@NotNull(message = "{errors.operator.mandatory}")
 	@Min(value=9, message="{errors.operator.min}")

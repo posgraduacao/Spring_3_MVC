@@ -5,9 +5,9 @@
 
 	<import resource="applicationContext.xml" />
 	<import resource="spring-mail.xml" />
-	<!-- 
 	<import resource="security.xml" /> 
 	<import resource="infrastructure.xml" />
+	<!-- 
 	-->
 
 </beans>

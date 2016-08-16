@@ -15,8 +15,8 @@
 	<context:component-scan base-package="br.up.pos.spring" />
 
 	<!-- ************** HABILITA SPRING E JAVA ANNOTATIONS ************** 
-	<mvc:annotation-driven validator="validator" />
 	-->
+	<mvc:annotation-driven validator="validator" />
 
 	<mvc:default-servlet-handler />
 
@@ -24,7 +24,7 @@
 		************** -->
 	<context:property-placeholder location="classpath*:*.properties" />
 
-	<!-- JSON -->
+	<!-- JSON 
 	<mvc:annotation-driven>
 		<mvc:message-converters register-defaults="false">
 			<bean id="jacksonMessageConverter"
@@ -33,17 +33,18 @@
 	</mvc:annotation-driven>
 
 	<bean id="gson" class="com.google.gson.Gson" />
+	-->
 
 	<!-- ************** CONFIGURA QUAL PAGINA SERÁ APRESENTADA A PARTIR DA STRING 
 		RETORNADA PELO CONTROLLER ************** concatena /WEB-INF/views/ + (String 
 		retorno CONTROLLER) + .jsp 
+		-->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
 		<property name="cache" value="false" />
 	</bean>
-		-->
 	
 
 	<!-- ************** HABILITA O TRAFEGO DE ARRAY DE BYTE (UPLOAD) E DEFINE 
